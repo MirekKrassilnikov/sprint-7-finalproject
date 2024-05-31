@@ -16,7 +16,14 @@ func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
 
+	realStatus := responseRecorder.Code
+	expectedStatus := http.StatusOK
 	body := responseRecorder.Body.String()
+
+	assert.Equal(t,realStatus, expectedStatus)
+	assert.Greater(t, len(body), 1)
+
+
 	list := strings.Split(body, ",")
 
 	assert.Equal(t, totalCount, len(list))
@@ -25,11 +32,12 @@ func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 
 func TestMainHandlerWhenWrongCity(t *testing.T) {
 
-	req := httptest.NewRequest("GET", "/cafe?count=10&city=tokyo", nil)
+	req := httptest.NewRequest("GET", "/cafe?count=10&city=sdssdfsd", nil)
 
 	responseRecorder := httptest.NewRecorder()
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
+
 	realBody := responseRecorder.Body.String()
 	expectedBody := "wrong city value"
 	realStatus := responseRecorder.Code
