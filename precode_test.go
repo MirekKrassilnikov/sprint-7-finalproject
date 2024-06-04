@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 func TestIfStatusOk (t *testing.T) {
-	req := httptest.NewRequest("GET", "/cafe?count=10&city=moscow", nil)
+	req := httptest.NewRequest("GET", "/cafe?count=2&city=moscow", nil)
 
 	responseRecorder := httptest.NewRecorder()
 	handler := http.HandlerFunc(mainHandle)
