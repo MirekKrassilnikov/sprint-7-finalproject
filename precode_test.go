@@ -7,6 +7,21 @@ import (
 	"strings"
 	"testing"
 )
+func TestIfStatusOk (t *testing.T) {
+	req := httptest.NewRequest("GET", "/cafe?count=10&city=moscow", nil)
+
+	responseRecorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(mainHandle)
+	handler.ServeHTTP(responseRecorder, req)
+
+	realStatus := responseRecorder.Code
+	expectedStatus := http.StatusOK
+
+	body := responseRecorder.Body.String()
+
+	assert.Equal(t,realStatus, expectedStatus)
+	assert.Greater(t, len(body), 1)
+}
 
 func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 	totalCount := 4
@@ -16,12 +31,9 @@ func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
 
-	realStatus := responseRecorder.Code
-	expectedStatus := http.StatusOK
+
 	body := responseRecorder.Body.String()
 
-	assert.Equal(t,realStatus, expectedStatus)
-	assert.Greater(t, len(body), 1)
 
 
 	list := strings.Split(body, ",")
